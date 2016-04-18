@@ -1,15 +1,5 @@
 <?php
 /*
- * Admin Customizer WordPress Plugin
- *
- *
- * @package   SMTP
- * @author    Michael Mizner<mike@miznerism.com>
- * @license   GPL-2.0+
- * @link      http://miznerism.com
- * @copyright 2015 Michael Mizner
- *
- * @wordpress-plugin
  * Plugin Name:       Dashboard Customizer
  * Plugin URI:        http://knoxweb.com
  * Description:       This plugin allows you to customize the admin interface of your WordPress site.  Several options are available in a single plugin.
