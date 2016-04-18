@@ -2,7 +2,6 @@
 /*
  * Admin Customizer WordPress Plugin
  *
- * GitHub Plugin URI: https://github.com/Mizner/WP-jQuery-Popup-Login-Form
  *
  * @package   SMTP
  * @author    Michael Mizner<mike@miznerism.com>
@@ -20,6 +19,8 @@
  * Text Domain:       dashboard-customizer
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
+ * GitHub Plugin URI: https://github.com/Mizner/WP-Dashboard-Customizer
+ * GitHub Branch:     master
  */
 // Add Stylesheet
 function admin_theme_style()
