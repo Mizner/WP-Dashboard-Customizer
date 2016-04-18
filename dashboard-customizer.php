@@ -3,7 +3,7 @@
  * Plugin Name:       Dashboard Customizer
  * Plugin URI:        http://knoxweb.com
  * Description:       This plugin allows you to customize the admin interface of your WordPress site.  Several options are available in a single plugin.
- * Version:           1.0
+ * Version:           1.1
  * Author:            Michael Mizner
  * Author URI:        http://mizner.io
  * Text Domain:       dashboard-customizer
