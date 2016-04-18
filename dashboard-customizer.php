@@ -1,58 +1,71 @@
 <?php
 /*
-* Admin Customizer WordPress Plugin
-*
-* @package   SMTP
-* @author    Michael Mizner<mike@miznerism.com>
-* @license   GPL-2.0+
-* @link      http://miznerism.com
-* @copyright 2015 Michael Mizner
-*
-* @wordpress-plugin
-* Plugin Name:       Dashboard Customizer
-* Plugin URI:        http://knoxweb.com
-* Description:       This plugin allows you to customize the admin interface of your WordPress site.  Several options are available in a single plugin.
-* Version:           1.0
-* Author:            Michael Mizner
-* Author URI:        http://miznerism.com
-* Text Domain:       dashboard-customizer
-* License:           GPL-2.0+
-* License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
-*/
+ * Admin Customizer WordPress Plugin
+ *
+ * GitHub Plugin URI: https://github.com/Mizner/WP-jQuery-Popup-Login-Form
+ *
+ * @package   SMTP
+ * @author    Michael Mizner<mike@miznerism.com>
+ * @license   GPL-2.0+
+ * @link      http://miznerism.com
+ * @copyright 2015 Michael Mizner
+ *
+ * @wordpress-plugin
+ * Plugin Name:       Dashboard Customizer
+ * Plugin URI:        http://knoxweb.com
+ * Description:       This plugin allows you to customize the admin interface of your WordPress site.  Several options are available in a single plugin.
+ * Version:           1.0
+ * Author:            Michael Mizner
+ * Author URI:        http://mizner.io
+ * Text Domain:       dashboard-customizer
+ * License:           GPL-2.0+
+ * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
+ */
 // Add Stylesheet
-function my_admin_theme_style() {
-    wp_enqueue_style('my-admin-theme', plugins_url('/admin/style.css', __FILE__));
+function admin_theme_style()
+{
+    wp_enqueue_style('admin-theme', plugins_url('style.css', __FILE__));
 }
-    add_action('admin_enqueue_scripts', 'my_admin_theme_style');
-    add_action('login_enqueue_scripts', 'my_admin_theme_style');
+
+add_action('admin_enqueue_scripts', 'admin_theme_style');
+add_action('login_enqueue_scripts', 'admin_theme_style');
 
 
 //changing the logo
-function my_custom_login_logo() {
+function custom_login_logo()
+{
     echo '<style type="text/css">
-    h1 a { background-image:url('.plugins_url('dashboard-customizer').'/images/logo.png) !important; }
+    h1 a { background-image:url(' . plugins_url('images/logo.png', __FILE__) . ') !important; }
+    .login {
+    background: url(' . plugins_url('images/background.jpg', __FILE__) . ') !important;
     </style>';
-    }
-    add_action('login_head', 'my_custom_login_logo');
+}
 
-    // changing the login page URL
-    function put_my_url(){
+add_action('login_head', 'custom_login_logo');
+
+// changing the login page URL
+function put_my_url()
+{
     return ('http://www.yourdomain.com/'); // putting my URL in place of the WordPress one
-    }
-    add_filter('login_headerurl', 'put_my_url');
+}
+
+add_filter('login_headerurl', 'put_my_url');
 
 // changing the login page URL hover text
-    function put_my_title(){
+function put_my_title()
+{
     return ('Name of Your Website'); // changing the title from "Powered by WordPress" to whatever you wish
-    }
-    add_filter('login_headertitle', 'put_my_title');
+}
+
+add_filter('login_headertitle', 'put_my_title');
 
 
 // Change the WordPress welcome message
 
 add_filter('gettext', 'change_howdy', 10, 3);
 
-function change_howdy($translated, $text, $domain) {
+function change_howdy($translated, $text, $domain)
+{
 
     if (!is_admin() || 'default' != $domain)
         return $translated;
@@ -64,13 +77,12 @@ function change_howdy($translated, $text, $domain) {
 }
 
 
-
-
 // Change the footer text in the dashboard with this code snippet:
 
-function change_footer_admin () {
+function change_footer_admin()
+{
 
-  echo 'Made with Love from Knoxweb';
+    echo 'Made with Love from Knoxweb';
 
 }
 
@@ -78,13 +90,16 @@ add_filter('admin_footer_text', 'change_footer_admin');
 
 
 //* Add theme info box into WordPress Dashboard
-function b3m_add_dashboard_widgets() {
-  wp_add_dashboard_widget('wp_dashboard_widget', 'Support Details', 'b3m_theme_info');
+function b3m_add_dashboard_widgets()
+{
+    wp_add_dashboard_widget('wp_dashboard_widget', 'Support Details', 'b3m_theme_info');
 }
-add_action('wp_dashboard_setup', 'b3m_add_dashboard_widgets' );
 
-function b3m_theme_info() {
-  echo "<ul>
+add_action('wp_dashboard_setup', 'b3m_add_dashboard_widgets');
+
+function b3m_theme_info()
+{
+    echo "<ul>
   <li><strong>Developed By:</strong> Knoxweb Marketing</li>
   <li><strong>Website:</strong> <a href='knoxweb.com'>www.knoxweb.com</a></li>
   <li><strong>Contact:</strong> <a href='mailto:info@knoxweb.com'>info@knoxweb.com</a></li>
@@ -92,11 +107,12 @@ function b3m_theme_info() {
 }
 
 // Remove Wordpress Admin Menu Bar info
-function annointed_admin_bar_remove() {
-        global $wp_admin_bar;
+function annointed_admin_bar_remove()
+{
+    global $wp_admin_bar;
 
-        /* Remove their stuff */
-        $wp_admin_bar->remove_menu('wp-logo');
+    /* Remove their stuff */
+    $wp_admin_bar->remove_menu('wp-logo');
 }
 
 add_action('wp_before_admin_bar_render', 'annointed_admin_bar_remove', 0);
@@ -104,10 +120,11 @@ add_action('wp_before_admin_bar_render', 'annointed_admin_bar_remove', 0);
 // Add Custom Admin Menu Bar item
 add_action('admin_bar_menu', 'add_toolbar_items', -1);
 
-    function add_toolbar_items($admin_bar) {
-        $admin_bar->add_menu( array(
-            'id'    => 'knoxweb',
-            'title' => '
+function add_toolbar_items($admin_bar)
+{
+    $admin_bar->add_menu(array(
+        'id' => 'knoxweb',
+        'title' => '
                         <svg version="1.1" 
                              id="Layer_1" 
                              xmlns="http://www.w3.org/2000/svg" 
@@ -245,40 +262,42 @@ add_action('admin_bar_menu', 'add_toolbar_items', -1);
                                 C518.6,156.8,521.3,155.5,524.3,154.1z"/>
                         </g>
                         </svg>',
-            'href'  => 'knoxweb.com',
-            'meta'  => array(
-                'title' => __(''),
-                ),
-            ));
-        $admin_bar->add_menu( array(
-            'id'     => 'my-sub-item',
-            'parent' => 'my-item',
-            'title'  => 'My Sub Menu Item',
-            'href'   => '#',
-            'meta'  => array(
-                'title' => __('My Sub Menu Item'),
-                'target' => '_blank',
-                'class' => 'my_menu_item_class'
-                ),
-            ));
-        $admin_bar->add_menu( array(
-            'id'    => 'my-second-sub-item',
-            'parent' => 'my-item',
-            'title' => 'My Second Sub Menu Item',
-            'href'  => '#',
-            'meta'  => array(
-                'title' => __('My Second Sub Menu Item'),
-                'target' => '_blank',
-                'class' => 'my_menu_item_class'
-                ),
-            ));
-    }
+        'href' => 'knoxweb.com',
+        'meta' => array(
+            'title' => __(''),
+        ),
+    ));
+    $admin_bar->add_menu(array(
+        'id' => 'my-sub-item',
+        'parent' => 'my-item',
+        'title' => 'My Sub Menu Item',
+        'href' => '#',
+        'meta' => array(
+            'title' => __('My Sub Menu Item'),
+            'target' => '_blank',
+            'class' => 'my_menu_item_class'
+        ),
+    ));
+    $admin_bar->add_menu(array(
+        'id' => 'my-second-sub-item',
+        'parent' => 'my-item',
+        'title' => 'My Second Sub Menu Item',
+        'href' => '#',
+        'meta' => array(
+            'title' => __('My Second Sub Menu Item'),
+            'target' => '_blank',
+            'class' => 'my_menu_item_class'
+        ),
+    ));
+}
 
 
 // Security
-function knoxweb_remove_version() {
-return '';
+function knoxweb_remove_version()
+{
+    return '';
 }
+
 add_filter('the_generator', 'knoxweb_remove_version');
 
 
