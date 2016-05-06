@@ -3,7 +3,7 @@
  * Plugin Name:       Dashboard Customizer
  * Plugin URI:        http://knoxweb.com
  * Description:       This plugin allows you to customize the admin interface of your WordPress site.  Several options are available in a single plugin.
- * Version:           1.2
+ * Version:           1.3
  * Author:            Michael Mizner
  * Author URI:        http://mizner.io
  * Text Domain:       dashboard-customizer
@@ -12,112 +12,112 @@
  * GitHub Plugin URI: https://github.com/Mizner/WP-Dashboard-Customizer
  * GitHub Branch:     master
  */
+
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+
 // Add Stylesheet
-function admin_theme_style()
-{
-    wp_enqueue_style('admin-theme', plugins_url('style.css', __FILE__));
+add_action( 'admin_enqueue_scripts', 'admin_theme_style' );
+add_action( 'login_enqueue_scripts', 'admin_theme_style' );
+function admin_theme_style() {
+	wp_enqueue_style( 'admin-theme', plugins_url( 'style.css', __FILE__ ) );
 }
 
-add_action('admin_enqueue_scripts', 'admin_theme_style');
-add_action('login_enqueue_scripts', 'admin_theme_style');
 
 
-//changing the logo
-function custom_login_logo()
-{
-    echo '<style type="text/css">
-    h1 a { background-image:url(' . plugins_url('images/logo.png', __FILE__) . ') !important; }
+// Changing the wp-login.php Logo
+add_action( 'login_head', 'custom_login_logo' );
+function custom_login_logo() {
+	echo '<style type="text/css">
+    h1 a { background-image:url(' . plugins_url( 'images/logo.png', __FILE__ ) . ') !important; }
     .login {
-    background: url(' . plugins_url('images/background.jpg', __FILE__) . ') !important;
+    background: url(' . plugins_url( 'images/background.jpg', __FILE__ ) . ') !important;
     </style>';
 }
 
-add_action('login_head', 'custom_login_logo');
 
-// changing the login page URL
-function put_my_url()
-{
-    return ('http://www.yourdomain.com/'); // putting my URL in place of the WordPress one
+// Change the login page URL
+add_filter( 'login_headerurl', 'put_my_url' );
+function put_my_url() {
+	return ( '' ); // putting my URL in place of the WordPress one
 }
 
-add_filter('login_headerurl', 'put_my_url');
 
-// changing the login page URL hover text
-function put_my_title()
-{
-    return ('Name of Your Website'); // changing the title from "Powered by WordPress" to whatever you wish
+// Change the login page URL hover text
+add_filter( 'login_headertitle', 'put_my_title' );
+function put_my_title() {
+	return ( '' ); // changing the title from "Powered by WordPress" to whatever you wish
 }
-
-add_filter('login_headertitle', 'put_my_title');
 
 
 // Change the WordPress welcome message
-
-add_filter('gettext', 'change_howdy', 10, 3);
-
-function change_howdy($translated, $text, $domain)
-{
-
-    if (!is_admin() || 'default' != $domain)
-        return $translated;
-
-    if (false !== strpos($translated, 'Howdy'))
-        return str_replace('Howdy', 'Welcome', $translated);
-
-    return $translated;
+add_filter( 'gettext', 'change_howdy', 10, 3 );
+function change_howdy( $translated, $text, $domain ) {
+	if ( ! is_admin() || 'default' != $domain ) {
+		return $translated;
+	}
+	if ( false !== strpos( $translated, 'Howdy' ) ) {
+		return str_replace( 'Howdy', 'Welcome', $translated );
+	}
+	return $translated;
 }
-
 
 // Change the footer text in the dashboard with this code snippet:
-
-function change_footer_admin()
-{
-
-    echo 'Made with Love from Knoxweb';
-
+add_filter( 'admin_footer_text', 'change_footer_admin' );
+function change_footer_admin() {
+	echo 'Made with Love from Knoxweb';
 }
 
-add_filter('admin_footer_text', 'change_footer_admin');
-
-
-//* Add theme info box into WordPress Dashboard
-function b3m_add_dashboard_widgets()
-{
-    wp_add_dashboard_widget('wp_dashboard_widget', 'Support Details', 'b3m_theme_info');
+/*
+ * # Add theme info box into WordPress Dashboard
+ */
+add_action( 'wp_dashboard_setup', 'add_dashboard_widgets' );
+function add_dashboard_widgets() {
+	wp_add_dashboard_widget( 'wp_dashboard_widget', 'Support Details', 'add_theme_info' );
 }
 
-add_action('wp_dashboard_setup', 'b3m_add_dashboard_widgets');
-
-function b3m_theme_info()
-{
-    echo "<ul>
+function add_theme_info() {
+	echo "<ul>
   <li><strong>Developed By:</strong> Knoxweb Marketing</li>
   <li><strong>Website:</strong> <a href='knoxweb.com'>www.knoxweb.com</a></li>
   <li><strong>Contact:</strong> <a href='mailto:info@knoxweb.com'>info@knoxweb.com</a></li>
   </ul>";
 }
 
-// Remove Wordpress Admin Menu Bar info
-function annointed_admin_bar_remove()
-{
-    global $wp_admin_bar;
+/*
+ * # Remove Wordpress Admin Menu Bar info
+ */
+add_action( 'wp_before_admin_bar_render', 'annointed_admin_bar_remove', 0 );
+function annointed_admin_bar_remove() {
+	global $wp_admin_bar;
 
-    /* Remove their stuff */
-    $wp_admin_bar->remove_menu('wp-logo');
+	/* Remove Wordpress Logo stuff */
+	$wp_admin_bar->remove_menu( 'wp-logo' );
 }
 
-add_action('wp_before_admin_bar_render', 'annointed_admin_bar_remove', 0);
 
-// Add Custom Admin Menu Bar item
-add_action('admin_bar_menu', 'add_toolbar_items', -1);
+/*
+ * # Remove Open Sans & Use System Fonts
+ */
+if ( ! function_exists( 'remove_wp_open_sans' ) ) :
+	function remove_wp_open_sans() {
+		wp_deregister_style( 'open-sans' );
+		wp_register_style( 'open-sans', false );
+	}
 
-function add_toolbar_items($admin_bar)
-{
-    $admin_bar->add_menu(array(
-        'id' => 'knoxweb',
-        'title' => '
+	add_action( 'wp_enqueue_scripts', 'remove_wp_open_sans' );
+	add_action( 'admin_enqueue_scripts', 'remove_wp_open_sans' );
+	add_action( 'login_enqueue_scripts', 'remove_wp_open_sans' );
+endif;
+
+// Add Knoxweb Logo
+add_action( 'admin_bar_menu', 'add_toolbar_items', - 1 );
+function add_toolbar_items( $admin_bar ) {
+	$admin_bar->add_menu( array(
+		'id'    => 'knoxweb',
+		'title' => '
                         <svg version="1.1" 
-                             id="Layer_1" 
+                             id="knoxwebLogo" 
                              xmlns="http://www.w3.org/2000/svg" 
                              xmlns:xlink="http://www.w3.org/1999/xlink" 
                              x="0px" y="0px"
@@ -253,43 +253,73 @@ function add_toolbar_items($admin_bar)
                                 C518.6,156.8,521.3,155.5,524.3,154.1z"/>
                         </g>
                         </svg>',
-        'href' => 'knoxweb.com',
-        'meta' => array(
-            'title' => __(''),
-        ),
-    ));
-    $admin_bar->add_menu(array(
-        'id' => 'my-sub-item',
-        'parent' => 'my-item',
-        'title' => 'My Sub Menu Item',
-        'href' => '#',
-        'meta' => array(
-            'title' => __('My Sub Menu Item'),
-            'target' => '_blank',
-            'class' => 'my_menu_item_class'
-        ),
-    ));
-    $admin_bar->add_menu(array(
-        'id' => 'my-second-sub-item',
-        'parent' => 'my-item',
-        'title' => 'My Second Sub Menu Item',
-        'href' => '#',
-        'meta' => array(
-            'title' => __('My Second Sub Menu Item'),
-            'target' => '_blank',
-            'class' => 'my_menu_item_class'
-        ),
-    ));
+		'href'  => 'knoxweb.com',
+		'meta'  => array(
+			'title' => __( '' ),
+		),
+	) );
+}
+/*
+ * # Dashboard Global
+ */
+
+
+
+
+/*
+* # Dashboard Home Area
+ */
+// ## Remove News Feed
+add_action( 'admin_init', 'remove_dashboard_meta' );
+function remove_dashboard_meta() {
+	remove_meta_box( 'dashboard_incoming_links', 'dashboard', 'normal' );
+	remove_meta_box( 'dashboard_plugins', 'dashboard', 'normal' );
+	remove_meta_box( 'dashboard_primary', 'dashboard', 'normal' );
+	remove_meta_box( 'dashboard_secondary', 'dashboard', 'normal' );
+	remove_meta_box( 'dashboard_incoming_links', 'dashboard', 'normal' );
+	remove_meta_box( 'dashboard_quick_press', 'dashboard', 'side' );
+	remove_meta_box( 'dashboard_recent_drafts', 'dashboard', 'side' );
+	remove_meta_box( 'dashboard_recent_comments', 'dashboard', 'normal' );
+	remove_meta_box( 'dashboard_right_now', 'dashboard', 'normal' );
+}
+
+// ## Remove "Welcome to Wordpress
+add_action( 'load-index.php', 'remove_welcome_panel' );
+function remove_welcome_panel() {
+	remove_action('welcome_panel', 'wp_welcome_panel');
+	$user_id = get_current_user_id();
+	if (0 !== get_user_meta( $user_id, 'show_welcome_panel', true ) ) {
+		update_user_meta( $user_id, 'show_welcome_panel', 0 );
+	}
+}
+
+/*
+ *  # Security
+ */
+// ## Remove WordPress Version
+// Remove From Source Code
+remove_action('wp_head', 'wp_generator');
+add_filter('the_generator', 'remove_version_info');
+function remove_version_info() {
+	return '';
+}
+
+// Pick out the version number from scripts and styles
+add_filter( 'style_loader_src', 'remove_version_from_style_js');
+add_filter( 'script_loader_src', 'remove_version_from_style_js');
+function remove_version_from_style_js( $src ) {
+	if ( strpos( $src, 'ver=' . get_bloginfo( 'version' ) ) )
+		$src = remove_query_arg( 'ver', $src );
+	return $src;
+}
+
+// Remove from Dashboard Footer
+add_action( 'admin_menu', 'my_footer_shh' );
+function my_footer_shh() {
+	remove_filter( 'update_footer', 'core_update_footer' );
 }
 
 
-// Security
-function knoxweb_remove_version()
-{
-    return '';
-}
-
-add_filter('the_generator', 'knoxweb_remove_version');
 
 
-?>
+

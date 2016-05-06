@@ -1,10 +1,3 @@
-@import url(https://fonts.googleapis.com/css?family=Montserrat);
-
-.wp-menu-name, #wpadminbar li a {
-    font-family: 'Montserrat', sans-serif !important;
-}
-
-
 .adminLogo {
     font-family: 'Montserrat', sans-serif !important;
     -webkit-font-smoothing: antialiased !important;
@@ -21,17 +14,32 @@
     background: #e67e22 !Important;
 }
 
-svg#Layer_1 {
+svg#knoxwebLogo {
     width: 20px;
     vertical-align: middle;
 }
 
 
-/* Login Page */
+
 body, html {
     background: transparent;
-    font-family: 'Montserrat', sans-serif !important;
 }
+/* Use System Fonts */
+body,
+#wpadminbar * {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen-Sans", "Ubuntu", "Cantarell", "Helvetica Neue", sans-serif;
+}
+
+.wp-switch-editor,
+.media-modal,
+.media-frame,
+.media-frame input,
+.media-frame select {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen-Sans", "Ubuntu", "Cantarell", "Helvetica Neue", sans-serif !important;
+}
+
+/* Login Page */
+
 .login {
     -webkit-background-size: cover;
     -moz-background-size: cover;
